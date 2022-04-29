@@ -1,4 +1,4 @@
-from flask import Blueprint, jsonify, abort, make_response
+from flask import Blueprint, jsonify, abort, make_response, request
 from app.models.planet import Planet
 from app import db
 
@@ -8,6 +8,21 @@ from app import db
 #         self.name = name
 #         self.description = description
 
+# create the blueprint
+planets_bp = Blueprint("planets", __name__, url_prefix="/planets")
+
+@planets_bp.route("", methods=["POST"])
+def handle_planets():
+    request_body = request.get_json()
+    new_planet = Planet(name=request_body["name"],
+                    description=request_body["description"],
+                    moons=request_body["moons"]
+                    )
+
+    db.session.add(new_planet)
+    db.session.commit()
+
+    return make_response(f"Planet {new_planet.name} successfully created", 201)
 
 # create our instances
 # planets = [
@@ -15,9 +30,6 @@ from app import db
 #     Planets(2, "Venus", "A gaseous planet"),
 #     Planets(3, "Earth", "Has lots of life")
 # ]
-
-# create the blueprint
-planets_bp = Blueprint("planets", __name__, url_prefix="/planets")
 
 
 # do the decorator
@@ -27,6 +39,21 @@ planets_bp = Blueprint("planets", __name__, url_prefix="/planets")
 #          to_dict(planet)
 #         for planet in planets
 #   ])
+
+@planets_bp.route("", methods=["GET"])
+def read_all_planets():
+    planets_response = []
+    planets = Planet.query.all()
+    for planet in planets:
+        planets_response.append(
+            {
+                "id": planet.id,
+                "name": planet.name,
+                "description": planet.description,
+                "moons": planet.moons
+            }
+        )
+    return jsonify(planets_response)
 
 # @planets_bp.route("/<planet_id>", methods = ["GET"])
 # def get_one_planet(planet_id):
