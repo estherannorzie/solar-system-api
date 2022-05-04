@@ -1,50 +1,36 @@
-from attr import validate
 from flask import Blueprint, jsonify, abort, make_response, request
 from app.models.planet import Planet
 from app import db
 
-# class Planets:
-#     def __init__(self, id, name, description):
-#         self.id = id
-#         self.name = name
-#         self.description = description
-
-# create the blueprint
 planets_bp = Blueprint("planets", __name__, url_prefix="/planets")
 
 @planets_bp.route("", methods=["POST"])
-def handle_planets():
+def create_planet():
     request_body = request.get_json()
-    new_planet = Planet(name=request_body["name"],
-                    description=request_body["description"],
-                    moons=request_body["moons"]
-                    )
+
+    new_planet = Planet.from_dict(request_body)
 
     db.session.add(new_planet)
     db.session.commit()
 
     return make_response(f"Planet {new_planet.name} successfully created", 201)
 
-# create our instances
-# planets = [
-#     Planets(1, "Mercury", "Small hot planet"),
-#     Planets(2, "Venus", "A gaseous planet"),
-#     Planets(3, "Earth", "Has lots of life")
-# ]
-
-
-# do the decorator
-# @planets_bp.route("", methods=["GET"])
-# def get_all_planets():
-#     return jsonify([
-#          to_dict(planet)
-#         for planet in planets
-#   ])
-
 @planets_bp.route("", methods=["GET"])
 def read_all_planets():
+    
+    name_query = request.args.get("name")
+    if name_query:
+        planets = Planet.query.filter_by(name=name_query)
+    else: 
+        planets = Planet.query.all() 
+    # description_query = request.args.get("description")
+    # if description_query:
+    #     planets.extend(Planet.query.filter_by(description=description_query))
+    
+    # if not planets:
+    #     planets = Planet.query.all()  
+
     planets_response = []
-    planets = Planet.query.all()
     for planet in planets:
         planets_response.append(planet.to_dict())
     return jsonify(planets_response)
