@@ -28,7 +28,7 @@ def create_app(test_config=None):
     from .planet_routes import planets_bp
     app.register_blueprint(planets_bp)
 
-    from .moon_routes import moon_bp
-    app.register_blueprint(moon_bp)
+    #from .moon_routes import moon_bp
+    #app.register_blueprint(moon_bp)
     
     return app

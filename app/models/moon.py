@@ -7,3 +7,12 @@ class Moon(db.Model):
   description = db.Column(db.String)
   planet_id = db.Column(db.Integer, db.ForeignKey('planet.id'))
   planets = db.relationship("Planet", back_populates="moon")
+
+  @classmethod
+  def from_dict(cls, data_dict):
+        return cls(name=data_dict["name"],
+                description=data_dict["description"],
+                moons=data_dict["moons"],
+                size=data_dict["size"],
+                planet_id=data_dict["planet_id"]
+                )
