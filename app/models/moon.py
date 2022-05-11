@@ -16,3 +16,12 @@ class Moon(db.Model):
                 size=data_dict["size"],
                 planet_id=data_dict["planet_id"]
                 )
+
+  def to_dict(self):
+    return {
+                "id": self.id,
+                "name": self.name,
+                "description": self.description,
+                "size": self.size,
+                "planet_id": self.planet_id
+            }

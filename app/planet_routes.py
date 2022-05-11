@@ -32,6 +32,14 @@ def create_moon(planet_id):
     return jsonify_message(f"Moon {new_moon.name} successfully created", 201)
 
 
+@planets_bp.route("/<planet_id>/moons", methods=["GET"])
+def read_all_moons(planet_id):
+    planet = validate_planet(planet_id)
+    response = [moon.to_dict() for moon in planet.moon]
+
+    return jsonify_message(response, 200)
+
+
 @planets_bp.route("", methods=["GET"])
 def read_all_planets():
     name_query = request.args.get("name")
