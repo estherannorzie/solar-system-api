@@ -22,9 +22,9 @@ def create_moon(planet_id):
     request_body = request.get_json()
     # new_moon = Moon.from_dict(request_body)
     new_moon = Moon(name = request_body['name'], 
-         size = request_body['size'],
-         description = request_body['description'],
-         planet_id = planet_id)
+        size = request_body['size'],
+        description = request_body['description'],
+        planet_id = planet_id)
 
     db.session.add(new_moon)
     db.session.commit()
@@ -80,20 +80,6 @@ def delete_planet(planet_id):
     db.session.commit()
     
     return jsonify_message("Planet succesfully deleted.", 200)
-    
-# def create_moon(planet_id):
-#     planet = validate_planet(planet_id)
-#     request_body = request.get_json()
-#     # new_moon = Moon.from_dict(request_body)
-#     new_moon = Moon(name = request_body['name'], 
-#          size = request_body['size'],
-#          description = request_body['description'],
-#          planet_id = planet_id)
-
-#     db.session.add(new_moon)
-#     db.session.commit()
-
-#     return jsonify_message(f"Moon {new_moon.name} successfully created", 201)
 
 def validate_planet(planet_id):
     try:
