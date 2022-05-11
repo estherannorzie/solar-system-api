@@ -5,7 +5,7 @@ from .planet_routes import jsonify_message, validate_planet, planets_bp
 
 # moon_bp = Blueprint("moons", __name__, url_prefix="/moons")
 
-# @moons_bp("planets//moons", methods=["POST"])
+# @moon_bp.route("<planet_id>/moons", methods=["POST"])
 # def create_moon(planet_id):
 #     planet = validate_planet(planet_id)
 #     request_body = request.get_json()
